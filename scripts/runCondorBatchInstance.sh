@@ -5,7 +5,7 @@ instance_suffix=$1
 pandoraLocation=$2
 eventsPerFile=$3
 source_dir=$4
-xml_dir=$5
+master_xml_dir=$5
 root_label=$6
 root_dir=$7
 nFilesPerJob=$8
@@ -16,16 +16,17 @@ validation_args=${12}
 totalBatches=${13}
 setupScriptLocation=${14}
 recoOption=${15}
+neutrino_xml_dir=${16}
 
 # Delete any existing ROOT and XML files.
 rm -f roots/*
 rm -f xmls/*
 
 echo -e "[batch $instance_suffix/$totalBatches] \e[1;35mWriting xml files\e[0m"
-source scripts/makeXml.sh "${source_dir}" "xml_bases/$instance_suffix.xml" "${xml_dir}" "${root_label}" "${root_dir}"
+source scripts/makeXml.sh "${source_dir}" "xml_bases/Master_$instance_suffix.xml" "xml_bases/Neutrino_$instance_suffix.xml" "${master_xml_dir}" "${neutrino_xml_dir}" "${root_label}" "${root_dir}"
 
 echo -e "[batch $instance_suffix/$totalBatches] \e[1;35mWriting run list\e[0m"
-source scripts/makeRunList.sh "$pandoraLocation" "$eventsPerFile" "${instance_suffix}" "${source_dir}" "xml_bases/${instance_suffix}.xml" "${nFilesPerJob}" "$setupScriptLocation" "$recoOption" 
+source scripts/makeRunList.sh "$pandoraLocation" "$eventsPerFile" "${instance_suffix}" "${source_dir}" "xml_bases/Master_${instance_suffix}.xml" "${nFilesPerJob}" "$setupScriptLocation" "$recoOption" 
 
 echo -e "[batch $instance_suffix/$totalBatches] \e[1;35mSubmitting condor jobs\e[0m"
 python scripts/pandora_runCondor.py -r "runlist_$instance_suffix.txt"

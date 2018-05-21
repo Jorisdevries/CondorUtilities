@@ -5,11 +5,11 @@
 # Set the configurable parameters.
 eventsPerFile=100
 configFile="config.txt"
-setupScriptLocation="~jjd49/lardirection_pandora/setup.sh"
+setupScriptLocation="~jjd49/pandora_direction/setup.sh"
 
 nFilesPerJob=10
 validate=false
-validationDir="~jjd49/lardirection_pandora/LArReco/validation/"
+validationDir="~jjd49/pandora_direction/LArReco/validation/"
 validationFileName="Validation.C"
 validationArgs="/* no args */"
 

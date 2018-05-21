@@ -1,9 +1,10 @@
 #!/bin/bash
-
+/
 # Grab the input parameters.
 eventsPerFile=$1
 config_file=$2
-xml_dir="xmls"
+master_xml_dir="master_xmls"
+neutrino_xml_dir="neutrino_xmls"
 root_label="root"
 root_dir="roots"
 nFilesPerJob=$3
@@ -29,7 +30,7 @@ if [ ! -d scripts ]; then
 fi
 
 # Make the required directories if they don't already exist.
-mkdir -p roots xml_bases xmls results catroots log
+mkdir -p roots xml_bases master_xmls neutrino_xmls results catroots log
 
 # Delete any existing concatenated ROOT and base XML files--and any existing results.
 rm -f catroots/*
@@ -57,10 +58,13 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     fi
 
     # Copy the master XML file into the base directory and use sed to make the replacements for each column.
-    settingsFileLocation=$(echo $line | awk "NR==1{print \$2}")
-    eval "cp $settingsFileLocation xml_bases/$batchCounter.xml" # settings file location could use a ~
+    masterSettingsFileLocation=$(echo $line | awk "NR==1{print \$2}")
+    neutrinoSettingsFileLocation=$(echo $line | awk "NR==1{print \$3}")
 
-    for i in `seq 5 $numColumns`; # column 1 is the pandora location, column 2 is the settings file to use, column 3 is the reconstruction option, 4 is the sample location, the rest are the replacements to make in the settings file
+    eval "cp $masterSettingsFileLocation xml_bases/Master_$batchCounter.xml" # settings file location could use a ~
+    eval "cp $neutrinoSettingsFileLocation xml_bases/Neutrino_$batchCounter.xml" # settings file location could use a ~
+
+    for i in `seq 6 $numColumns`; # column 1 is the pandora location, column 2 is the master settings file to use, column 3 is the neutrino settings file to use, column 4 is the reconstruction option, 5 is the sample location, the rest are the replacements to make in the settings file
         do
             columnTitle=$(awk "NR==1{print \$$i}" $config_file)
             
@@ -69,7 +73,8 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
             columnEntry=$(echo $line | awk "NR==1{print \$$i}")
             set +f
 
-            sed -i.bak s/"£$columnTitle£"/$columnEntry/g xml_bases/$batchCounter.xml
+            sed -i.bak s/"£$columnTitle£"/$columnEntry/g xml_bases/Master_$batchCounter.xml
+            sed -i.bak s/"£$columnTitle£"/$columnEntry/g xml_bases/Neutrino_$batchCounter.xml
             
         done  
 
@@ -90,14 +95,14 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     fi
 
     pandoraLocation=$(echo $line | awk "NR==1{print \$1}")
-    recoOption=$(echo $line | awk "NR==1{print \$3}")
+    recoOption=$(echo $line | awk "NR==1{print \$4}")
 
     # Avoid wildcard expansion in sample location.
     set -f
-    sampleLocation=$(echo $line | awk "NR==1{print \$4}")
+    sampleLocation=$(echo $line | awk "NR==1{print \$5}")
     set +f
 
-    source scripts/runCondorBatchInstance.sh $batchCounter "$pandoraLocation" "$eventsPerFile" "$sampleLocation" "${xml_dir}" "${root_label}" "${root_dir}" "${nFilesPerJob}" "${validate}" "${validation_directory}" "${validation_filename}" "${validation_args}" "$largestBatchNumber" "$setupScriptLocation" "$recoOption" 
+    source scripts/runCondorBatchInstance.sh $batchCounter "$pandoraLocation" "$eventsPerFile" "$sampleLocation" "${master_xml_dir}" "${root_label}" "${root_dir}" "${nFilesPerJob}" "${validate}" "${validation_directory}" "${validation_filename}" "${validation_args}" "$largestBatchNumber" "$setupScriptLocation" "$recoOption" "${neutrino_xml_dir}" 
 
     batchCounter=$((batchCounter+1))
     
