@@ -77,21 +77,12 @@
         <algorithm type = "LArSimpleClusterCreation" description = "ClusterRebuilding"/>
     </algorithm>
 
-    <!--algorithm type = "LArVisualMonitoring">
-        <ShowCurrentClusters>true</ShowCurrentClusters>
-        <ShowDetector>true</ShowDetector>
-    </algorithm-->
-
     <!-- VertexAlgorithms -->
     <algorithm type = "LArDirectionClusterSplitting">
         <InputClusterListNames>ClustersU ClustersV ClustersW</InputClusterListNames>
+        <EnableDirection>£EnableDirection£</EnableDirection>
         <tool type = "LArTrackDirectionTool" description = "TrackDirection"></tool>
     </algorithm>
-
-    <!--algorithm type = "LArVisualMonitoring">
-        <ShowCurrentClusters>true</ShowCurrentClusters>
-        <ShowDetector>true</ShowDetector>
-    </algorithm-->
 
     <algorithm type = "LArCandidateVertexCreation">
         <InputClusterListNames>ClustersU ClustersV ClustersW</InputClusterListNames>
@@ -111,7 +102,7 @@
         <InputClusterListNames>ClustersU ClustersV ClustersW</InputClusterListNames>
         <OutputVertexListName>NeutrinoVertices3D</OutputVertexListName>
         <ReplaceCurrentVertexList>true</ReplaceCurrentVertexList>
-        <SvmFileName>PandoraSvm_v03_11_00.xml</SvmFileName>
+        <SvmFileName>PandoraSvm_v03_11_00_RegionRetrained.xml</SvmFileName>
         <RegionSvmName>VertexSelectionRegion</RegionSvmName>
         <VertexSvmName>VertexSelectionVertex</VertexSvmName>
         <FeatureTools>
@@ -122,7 +113,15 @@
             <tool type = "LArRPhiFeature"/>
         </FeatureTools>
         <tool type = "LArTrackDirectionTool" description = "TrackDirection"></tool>
-        <EnableDirection>true</EnableDirection>
+        <tool type = "LArDirectionFlowProbabilityTool" description = "DirectionFlowProbability"></tool>
+        <EnableDirection>£EnableDirection£</EnableDirection>
+        <TrainingSetMode>£TrainingSetMode£</TrainingSetMode>
+        <TrainingOutputFileRegion>Region</TrainingOutputFileRegion>
+        <TrainingOutputFileVertex>Vertex</TrainingOutputFileVertex>
+        <MCParticleListName>Input</MCParticleListName>
+        <CaloHitListName>Input</CaloHitListName>
+        <AllowClassifyDuringTraining>true</AllowClassifyDuringTraining>
+        <FileIdentifier>FILE_IDENTIFIER</FileIdentifier>
     </algorithm>
     <algorithm type = "LArCutClusterCharacterisation">
         <InputClusterListNames>ClustersU ClustersV ClustersW</InputClusterListNames>
@@ -373,7 +372,7 @@
         <InputHitListName>Input</InputHitListName>
         <ClusterListName>ClustersW</ClusterListName>
         <VertexListName>NeutrinoVertices3D</VertexListName>
-        <PfoListName>TrackParticles3D</PfoListName>
+        <PfoListName>NeutrinoParticles3D</PfoListName>
         <ParticleContained>true</ParticleContained>
         <Cosmic>£Cosmic£</Cosmic>
         <Data>£Data£</Data>

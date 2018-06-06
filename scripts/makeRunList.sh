@@ -31,12 +31,12 @@ do
     # Make the input configuration files strings @-separated (but we want no @ at the end).
     if [ $counter -eq $nFilesPerJob ];
     then
-        echo -ne " > Writing: master_xmls/PandoraSettings_Master_${fileIdentifier}.xml to runlist."\\r
+        echo -ne " > Adding master_xmls/PandoraSettings_Master_${fileIdentifier}.xml to runlist."\\r
         echo $(pwd)/master_xmls/PandoraSettings_Master_${fileIdentifier}.xml >> "runlist_$instance_suffix.txt"
         counter=$(expr $counter - $nFilesPerJob)
         firstTime=false
     else
-        echo -ne " > Writing: master_xmls/PandoraSettings_Master_${fileIdentifier}.xml to runlist."\\r
+        echo -ne " > Adding master_xmls/PandoraSettings_Master_${fileIdentifier}.xml to runlist."\\r
         echo -n $(pwd)/master_xmls/PandoraSettings_Master_${fileIdentifier}.xml@ >> "runlist_$instance_suffix.txt"
 
     fi

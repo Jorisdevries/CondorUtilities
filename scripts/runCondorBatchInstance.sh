@@ -17,13 +17,14 @@ totalBatches=${13}
 setupScriptLocation=${14}
 recoOption=${15}
 neutrino_xml_dir=${16}
+cosmic_xml_dir=${17}
 
 # Delete any existing ROOT and XML files.
 rm -f roots/*
 rm -f xmls/*
 
 echo -e "[batch $instance_suffix/$totalBatches] \e[1;35mWriting xml files\e[0m"
-source scripts/makeXml.sh "${source_dir}" "xml_bases/Master_$instance_suffix.xml" "xml_bases/Neutrino_$instance_suffix.xml" "${master_xml_dir}" "${neutrino_xml_dir}" "${root_label}" "${root_dir}"
+source scripts/makeXml.sh "${source_dir}" "xml_bases/Master_$instance_suffix.xml" "xml_bases/Neutrino_$instance_suffix.xml" "xml_bases/Cosmic_$instance_suffix.xml" "${master_xml_dir}" "${neutrino_xml_dir}" "${cosmic_xml_dir}" "${root_label}" "${root_dir}"
 
 echo -e "[batch $instance_suffix/$totalBatches] \e[1;35mWriting run list\e[0m"
 source scripts/makeRunList.sh "$pandoraLocation" "$eventsPerFile" "${instance_suffix}" "${source_dir}" "xml_bases/Master_${instance_suffix}.xml" "${nFilesPerJob}" "$setupScriptLocation" "$recoOption" 
